@@ -64,39 +64,3 @@ docker run --rm -p 3000:80 -e MY_APP_API_URL=api_url -e MY_APP_KEY=key image-nam
 When we run the above command all the env vars which start with prefix MY_APP_ it will replace the value which we provided using -e flag this is how we can add the env-vars in vite react app at runtime
 
 Hope my solution works in your case Thank you!
-
-Share
-Improve this answer
-Follow
-edited Nov 10, 2023 at 14:52
-answered Nov 9, 2023 at 15:46
-Anas sain's user avatar
-Anas sain
-3122 bronze badges
-Add a comment
-1
-
-I came up with a solution and published it as packages to the npm registry.
-
-With this solution, you don't need to change any code:
-
-// src/index.js
-console.log(`API base URL is: ${import.meta.env.API_BASE_URL}.`);
-It separate the build step out into two build step:
-
-During production it will be statically replaced import.meta.env with a placeholder:
-
-// dist/index.js
-console.log(
-  `API base URL is: ${"__import_meta_env_placeholder__".API_BASE_URL}.`
-);
-You can then run the package's CLI anywhere to replace the placeholders with your environment variables:
-
-// dist/index.js
-console.log(
-  `API base URL is: ${{ API_BASE_URL: "https://httpbin.org" }.API_BASE_URL}.`
-);
-// > API base URL is: https://httpbin.org.
-Here is the documentation site: https://iendeavor.github.io/import-meta-env/.
-
-Feel free to provide any feedback.
